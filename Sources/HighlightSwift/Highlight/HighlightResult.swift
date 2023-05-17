@@ -2,7 +2,7 @@ import SwiftUI
 
 public struct HighlightResult: Equatable {
     /// The syntax highlighted attributed text
-    public let text: AttributedString
+    public let text: NSMutableAttributedString
     /// Indicates that one or more illegal matches were found
     public let illegal: Bool
     /// The detected language identifier
@@ -14,7 +14,7 @@ public struct HighlightResult: Equatable {
     /// The styled background color
     public let backgroundColor: Color
     
-    init(text: AttributedString,
+    init(text: NSMutableAttributedString,
          illegal: Bool,
          language: String,
          relevance: Int,

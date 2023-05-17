@@ -1,7 +1,7 @@
 import OSLog
 import JavaScriptCore
 
-class Highlight {
+public class Highlight {
     private var hljs: JSValue
     private static let shared = Highlight()
   
@@ -49,13 +49,13 @@ class Highlight {
         }
         let data = try data(value, selectors: style.selectorsText)
         let attributed = try attributed(data)
-#if os(macOS)
-        let attributedText = try AttributedString(attributed, including: \.appKit)
-#else
-        let attributedText = try AttributedString(attributed, including: \.uiKit)
-#endif
+//#if os(macOS)
+//        let attributedText = try AttributedString(attributed, including: \.appKit)
+//#else
+//        let attributedText = try AttributedString(attributed, including: \.uiKit)
+//#endif
         return HighlightResult(
-            text: attributedText,
+            text: attributed,
             illegal: illegal,
             language: language,
             relevance: relevance,
