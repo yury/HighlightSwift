@@ -1,9 +1,17 @@
 import OSLog
 import JavaScriptCore
 
-public actor Highlight {
-    private var hljs: JSValue?
+class Highlight {
+    private var hljs: JSValue
     private static let shared = Highlight()
+  
+    init() {
+      let context = JSContext()!
+      let highlightFilePath = Bundle.module.path(forResource: "highlight.min", ofType: "js")!
+      let highlightScript = try! String(contentsOfFile: highlightFilePath)
+      context.evaluateScript(highlightScript)
+      self.hljs = context.objectForKeyedSubscript("hljs")!
+    }
     
     /// Attempts to syntax highlight the specified text.
     /// - Parameters:
@@ -14,8 +22,8 @@ public actor Highlight {
     /// - Returns: The result of the syntax highlight.
     public static func text(_ text: String,
                             language: String? = nil,
-                            style: HighlightStyle = .dark(.xcode)) async throws -> HighlightResult {
-        try await shared.text(
+                            style: HighlightStyle = .dark(.xcode)) throws -> HighlightResult {
+        try shared.text(
             text,
             language: language,
             style: style
@@ -25,7 +33,6 @@ public actor Highlight {
     private func text(_ text: String,
                       language: String?,
                       style: HighlightStyle) throws -> HighlightResult {
-        let hljs = try loadHLJS()
         let highlightResult: JSValue
         if let language {
             highlightResult = hljs.invokeMethod("highlight", withArguments: [text, ["language": language]])
@@ -56,24 +63,7 @@ public actor Highlight {
         )
     }
     
-    private func loadHLJS() throws -> JSValue {
-        if let hljs {
-            return hljs
-        }
-        guard let context = JSContext() else {
-            throw HighlightError.noJSContext
-        }
-        guard let highlightFilePath = Bundle.module.path(forResource: "highlight.min", ofType: "js") else {
-            throw HighlightError.fileNotFound
-        }
-        let highlightScript = try String(contentsOfFile: highlightFilePath)
-        context.evaluateScript(highlightScript)
-        guard let hljs = context.objectForKeyedSubscript("hljs") else {
-            throw HighlightError.hljsNotFound
-        }
-        self.hljs = hljs
-        return hljs
-    }
+    
     
     private func data(_ value: String, selectors: String) throws -> Data {
         let data = "<style>"
