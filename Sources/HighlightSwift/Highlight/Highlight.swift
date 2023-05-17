@@ -69,9 +69,9 @@ public class Highlight {
         let data = "<style>"
             .appending(selectors)
             .appending("</style>")
-            .appending("<pre><code class=\"hljs\">")
+            .appending("<code class=\"hljs\">")
             .appending(value.trimmingCharacters(in: .whitespacesAndNewlines))
-            .appending("</code></pre>")
+            .appending("</code>")
             .data(using: .utf8)
         guard let data else {
             throw HighlightError.dataEncoding
@@ -90,6 +90,9 @@ public class Highlight {
         )
         let range = NSMakeRange(0, nsAttributedString.length)
         nsAttributedString.removeAttribute(.font, range: range)
+        if nsAttributedString.string.hasSuffix("\n") {
+          nsAttributedString.replaceCharacters(in: NSRange(location: nsAttributedString.length - 1, length: 1), with: "")
+        }
         return nsAttributedString
     }
 }
