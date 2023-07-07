@@ -69,9 +69,9 @@ public class Highlight {
         let data = "<style>"
             .appending(selectors)
             .appending("</style>")
-            .appending("<code class=\"hljs\">")
+            .appending("<pre><code class=\"hljs\">")
             .appending(value.trimmingCharacters(in: .whitespacesAndNewlines))
-            .appending("</code>")
+            .appending("</code></pre>")
             .data(using: .utf8)
         guard let data else {
             throw HighlightError.dataEncoding
