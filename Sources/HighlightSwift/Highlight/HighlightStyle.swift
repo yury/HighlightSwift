@@ -2,6 +2,7 @@ import SwiftUI
 
 public struct HighlightStyle {
     public let name: Name
+    public let colorSheme: ColorScheme
     let selectorsText: String
     let backgroundHex: String
     
@@ -52,6 +53,7 @@ public struct HighlightStyle {
     
     public init(_ name: Name, colorScheme: ColorScheme) {
         self.name = name
+        self.colorSheme = colorScheme
         switch colorScheme {
         case .light:
             self.selectorsText = String(describing: HighlightStyleSelectors.light(name))
